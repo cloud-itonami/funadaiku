@@ -1,13 +1,13 @@
 {
   "@context" : [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1" ],
-  "id" : "did:web:etzhayyim.github.io:com-etzhayyim-funadaiku",
-  "alsoKnownAs" : [ "at://funadaiku.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-funadaiku", "rad:bafkreih2d5hnctsf4vzoy3zenpdwijghg3p35dvhuv3e3prc5ojgvqod3a" ],
+  "id" : "did:web:etzhayyim.com:actor:funadaiku",
+  "alsoKnownAs" : [ "at://funadaiku.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-funadaiku", "rad:bafkreih2d5hnctsf4vzoy3zenpdwijghg3p35dvhuv3e3prc5ojgvqod3a", "did:web:etzhayyim.github.io:com-etzhayyim-funadaiku" ],
   "service" : [ {
-    "id" : "did:web:etzhayyim.github.io:com-etzhayyim-funadaiku#atproto_pds",
+    "id" : "did:web:etzhayyim.com:actor:funadaiku#atproto_pds",
     "type" : "AtprotoPersonalDataServer",
     "serviceEndpoint" : "https://pds.etzhayyim.com"
   }, {
-    "id" : "did:web:etzhayyim.github.io:com-etzhayyim-funadaiku#aozora",
+    "id" : "did:web:etzhayyim.com:actor:funadaiku#aozora",
     "type" : "AozoraAppView",
     "serviceEndpoint" : "https://aozora.app"
   } ]
