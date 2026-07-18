@@ -1,0 +1,77 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.blockFabricationAttestation",
+  "description": "L1 steel-block fabrication attestation — panel cut/weld + curved/flat block forming + dimensional & NDT block QA. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "blockId": {
+            "type": "string"
+          },
+          "materialLot": {
+            "type": "string",
+            "description": "marine steel grade + lot id + cert CID"
+          },
+          "weldPasses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dimensionalToleranceMm": {
+            "type": "integer"
+          },
+          "attestingRobots": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#robotSignature"
+            },
+            "description": "Ed25519 robot witness quorum (>=2 distinct robots, G4)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "blockId",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

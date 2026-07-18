@@ -1,10 +1,10 @@
-(ns funadaiku.py.test-agent
+(ns funadaiku.methods.test-agent
   "funadaiku 船大工 — agent cell tests. 1:1 port of py/test_agent.py (custom harness → clojure.test).
   Offline (no llm): zero-emission propulsion enforcement (G8), green-H₂ chain-of-custody (G9), USDC
   tithe-split (G7), and the 9 lifecycle handlers."
   (:require [clojure.test :refer [deftest is]]
             [clojure.string :as str]
-            [funadaiku.py.agent :as agent]))
+            [funadaiku.methods.agent :as agent]))
 
 (deftest test-steel-block-fabrication-plan
   (let [out (agent/handle-steel-block-fabrication {"blockId" "block-001" "dimensions" "12000x8000x25"})]

@@ -151,5 +151,5 @@ are import-smoke-only until the env is fixed and `solve()` is R1-activated.
 - `/20-actors/funadaiku/data/building.edn` — vessel SBOM
 - `/20-actors/funadaiku/methods/voyage_energy.py` — wind/solar/hydrogen energy-budget sim
 - `/90-docs/adr/2606013400-funadaiku-zero-emission-cargo-shipbuilding-r0.md` — Master ADR
-- `/20-actors/watatsumi/CLAUDE.md` — submersible sibling (block-shipyard methodology, G13)
+- `/orgs/etzhayyim/com-etzhayyim-watatsumi/CLAUDE.md` — submersible sibling (block-shipyard methodology, G13)
 - `/90-docs/adr/2606010600-kami-autodrive-gnc-autonomy-layer.md` — ShipHydro GNC

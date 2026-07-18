@@ -1,4 +1,0 @@
-# funadaiku 船大工 — py cell deps (ADR-2606013400)
-# Runtime LLM + datalog bindings are kotoba host imports (WASM Component Model),
-# not pip packages. No openai/anthropic/litellm (Murakumo-only, ADR-2605215000).
-# Test harness below only if needed locally; R0 has no external deps.

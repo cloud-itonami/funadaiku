@@ -1,0 +1,83 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.silenCargoShipReview",
+  "description": "Council 5-of-7 Safe attestation review for every new cargo-ship class and any G/N amendment. Required before any L1 fabrication starts for a new class. Per ADR-2606013400 Council Lv6+ supermajority.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselClassId": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "knownValues": [
+              "r0-scaffold-baseline",
+              "r1-scale-model-hil",
+              "r2-pilot-harbour-craft",
+              "r3-coastal-cargo",
+              "gate-amendment-G12-cap-revision",
+              "gate-amendment-G7-mass-degree",
+              "non-goal-amendment"
+            ]
+          },
+          "councilSafeAddress": {
+            "type": "string"
+          },
+          "councilSignatures": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#councilSignature"
+            },
+            "minItems": 5
+          },
+          "decision": {
+            "type": "string",
+            "knownValues": [
+              "approve",
+              "reject",
+              "request-revision"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        },
+        "required": [
+          "vesselClassId",
+          "scope",
+          "councilSignatures",
+          "decision",
+          "recordedAt"
+        ]
+      }
+    },
+    "councilSignature": {
+      "type": "object",
+      "properties": {
+        "councilMemberDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "councilMemberDid",
+        "signature"
+      ]
+    }
+  }
+}

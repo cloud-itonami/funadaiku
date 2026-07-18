@@ -1,0 +1,86 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.weldInspectionRecord",
+  "description": "L3 weld inspection record — 100% RT/UT/PT hull-seam NDT + defect disposition. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "seamId": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "knownValues": [
+              "RT",
+              "UT",
+              "PT",
+              "MT",
+              "VT"
+            ]
+          },
+          "accept": {
+            "type": "boolean"
+          },
+          "defectDisposition": {
+            "type": "string"
+          },
+          "ipfsEvidenceCid": {
+            "type": "string",
+            "description": "pinned photo/video (G3)"
+          },
+          "attestingRobots": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#robotSignature"
+            },
+            "description": "Ed25519 robot witness quorum (>=2 distinct robots, G4)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "seamId",
+          "method",
+          "accept",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.grandBlockAssemblyAttestation",
+  "description": "L2 grand-block assembly attestation — grand-block erection on building dock + block-join welding + hull-girder QA. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "grandBlockIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockJoinWelds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hullGirderAlignmentMm": {
+            "type": "integer"
+          },
+          "attestingRobots": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#robotSignature"
+            },
+            "description": "Ed25519 robot witness quorum (>=2 distinct robots, G4)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

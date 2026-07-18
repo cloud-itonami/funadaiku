@@ -3,7 +3,9 @@
 ;; ADR-2606013400 (R0 scaffold) · 2026-06-01
 {:actor/id        "funadaiku"
  :actor/glyph     "船大工"
+ :actor/display-name "船大工 — Zero-Emission Autonomous Cargo Shipbuilding"
  :actor/tier      :tier-b
+ :actor/integrates ["hikari" "watatsumi"]
  :actor/domain    "funadaiku.etzhayyim.com"
  :actor/purpose   "Zero-emission autonomous cargo shipbuilding — 9 Pregel cells implementing hull block fabrication, assembly, NDT inspection, powertrain integration (wind-assist + solar + H₂ fuel cell + LFP battery + electric pods), outfitting, launch commissioning, sea trial, decarbonization audit, and class certification (Nagi class reference, 3,000 DWT, ~90m × 15m, 10 kn service speed, IMO MASS Degree 3)."
  :actor/status    :r0

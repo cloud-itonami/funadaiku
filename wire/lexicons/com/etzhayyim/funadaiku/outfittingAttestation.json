@@ -1,0 +1,77 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.outfittingAttestation",
+  "description": "L5a outfitting attestation — cargo systems + hatch covers + low-VOC coatings + accommodation + autonomy sensor suite. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "cargoSystemsFitted": {
+            "type": "boolean"
+          },
+          "coatingVocBounded": {
+            "type": "boolean",
+            "description": "G14 VOC-bounded coating"
+          },
+          "sensorSuite": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "navSonarDbMax": {
+            "type": "integer",
+            "description": "<=180 dB re 1uPa @1m (G8)"
+          },
+          "attestingRobots": {
+            "type": "array",
+            "items": {
+              "type": "ref",
+              "ref": "#robotSignature"
+            },
+            "description": "Ed25519 robot witness quorum (>=2 distinct robots, G4)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

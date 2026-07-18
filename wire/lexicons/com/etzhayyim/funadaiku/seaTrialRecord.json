@@ -1,0 +1,69 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.seaTrialRecord",
+  "description": "L5c sea trial record — speed/endurance + IMO MASS Degree-3 autonomy + COLREG-compliance trial. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "speedTrialKn": {
+            "type": "integer"
+          },
+          "enduranceNm": {
+            "type": "integer"
+          },
+          "massAutonomyDegreeVerified": {
+            "type": "integer"
+          },
+          "colregCompliant": {
+            "type": "boolean"
+          },
+          "ipfsEvidenceCid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "vesselId",
+          "speedTrialKn",
+          "colregCompliant",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

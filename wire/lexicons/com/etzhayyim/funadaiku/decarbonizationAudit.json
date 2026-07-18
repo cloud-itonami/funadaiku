@@ -1,0 +1,87 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.decarbonizationAudit",
+  "description": "Cross-cutting decarbonization audit — MARPOL Annex VI + EEXI + CII + IMO GHG strategy, evaluated WELL-TO-WAKE incl. green-H2/NH3/methanol chain-of-custody (G14). A vessel burning hydrogen made from fossil power is NOT zero-emission. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "scope": {
+            "type": "string",
+            "knownValues": [
+              "well-to-wake",
+              "tank-to-wake"
+            ]
+          },
+          "fossilEngine": {
+            "type": "boolean",
+            "description": "MUST be false (G13/N5)"
+          },
+          "ciiRating": {
+            "type": "string",
+            "knownValues": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ]
+          },
+          "greenFuelCocVerified": {
+            "type": "boolean",
+            "description": "green production chain-of-custody (G14)"
+          },
+          "wellToWakeCo2eGramPerTonneNm": {
+            "type": "integer"
+          },
+          "eexiAttainedMilli": {
+            "type": "integer",
+            "description": "EEXI attained, integer milli-gCO2e/tonne-nm (×1000 implied)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "scope",
+          "fossilEngine",
+          "greenFuelCocVerified",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

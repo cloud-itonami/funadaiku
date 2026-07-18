@@ -1,0 +1,66 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.funadaiku.launchCommissioningRecord",
+  "description": "L5b launch & commissioning record — float-out + inclining (stability) test + dock trial. Per ADR-2606013400.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "vesselId": {
+            "type": "string"
+          },
+          "vesselClass": {
+            "type": "string"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "floatedOut": {
+            "type": "boolean"
+          },
+          "dockTrialPassed": {
+            "type": "boolean"
+          },
+          "ipfsEvidenceCid": {
+            "type": "string"
+          },
+          "incliningTestGmMm": {
+            "type": "integer",
+            "description": "metacentric height GM (mm, integer implied unit)"
+          }
+        },
+        "required": [
+          "vesselId",
+          "floatedOut",
+          "recordedAt"
+        ]
+      }
+    },
+    "robotSignature": {
+      "type": "object",
+      "properties": {
+        "robotDid": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "required": [
+        "robotDid",
+        "signature"
+      ]
+    }
+  }
+}

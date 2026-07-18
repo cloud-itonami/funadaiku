@@ -1,0 +1,41 @@
+{:migration/id :funadaiku/flat-west-standalone
+ :migration/status :standalone-content-contained
+ :migration/source "etzhayyim/root:20-actors/funadaiku"
+ :migration/source-revision "86efa16a239445fb0955e2268291daeb2de9ee6a"
+ :migration/canonical-repository "https://github.com/etzhayyim/com-etzhayyim-funadaiku"
+ :migration/canonical-path "orgs/etzhayyim/com-etzhayyim-funadaiku"
+ :migration/content
+ {:root-files 47
+  :canonical-metadata "manifest.edn"
+  :retired-metadata "manifest.jsonld"
+  :root-only-integrated
+  ["cells/social_post/state_machine.cljc"
+   "methods/agent.cljc"
+   "methods/social.cljc"
+   "methods/test_agent.cljc"
+   "schema.edn"]
+  :deprecated-pruned
+  ["kotoba/ingest_mcp.py" "py/"]}
+ :migration/canonicalization
+ {:metadata :edn
+  :data :edn
+  :external-wire-root "wire/"
+  :wire-formats #{:json}
+  :deprecated-languages #{:go :tinygo}
+  :deprecated-language-action :prune-not-port}
+ :migration/verification
+ {:command "./run_tests.sh"
+  :tests 43 :assertions 396 :failures 0 :errors 0}
+ :migration/root-action
+ {:actor-directory :replace-with-moved-edn
+  :repoint
+  ["70-tools/src/etzhayyim/lint/shell-baseline.edn"]
+  :retain-central
+  ["00-contracts/lexicons/com/etzhayyim/funadaiku"
+   "90-docs/adr/2606013400-funadaiku-zero-emission-cargo-shipbuilding-r0.edn"
+   "90-docs/2606022500-organism-axis-affiliation-convention.edn"
+   "50-infra/etzhayyim-did-web/src/registry"]}
+ :migration/known-gaps
+ [:root-tombstone-not-yet-committed
+  :shell-baseline-not-yet-repointed
+  :west-revision-not-yet-repinned]}

@@ -1,4 +1,4 @@
-(ns funadaiku.py.agent
+(ns funadaiku.methods.agent
   "funadaiku 船大工 — zero-emission cargo shipbuilding cell. 1:1 port of py/agent.py. Nine handlers
   over the shipbuilding lifecycle + the DEFINING G8/G9 zero-emission propulsion gate + the G7 USDC
   tithe-split settlement. Defining gate G8: NO fossil main/auxiliary engine — wind-assist + solar +
