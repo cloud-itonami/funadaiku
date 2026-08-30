@@ -1,0 +1,146 @@
+(ns funadaiku.governor-conformance-test
+  "Ties the Governor to the documents it claims to enforce.
+
+  `governor-test` proves the rules decide correctly on fixtures. That is not
+  enough on its own: a rule could refuse impeccably in the name of a gate the
+  constitution never declared, or the constitution could grow a fifteenth gate
+  that nothing evaluates and nothing reports. These tests read
+  `manifest.jsonld` and `data/vessel.edn` and close both gaps.
+
+  Reading is deliberately fail-loud. If a document cannot be found or parsed
+  the tests fail; they never skip. A conformance suite that silently passes
+  when it could not read its input reports the same green as one that read
+  everything and found no problem."
+  (:require [clojure.test :refer [deftest is testing]]
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [cheshire.core :as json]
+            [funadaiku.governor :as g]))
+
+(defn- must-slurp [path]
+  (let [f (io/file path)]
+    (when-not (.exists f)
+      (throw (ex-info (str "conformance input missing: " path
+                           " (cwd " (System/getProperty "user.dir") ")")
+                      {:path path})))
+    (slurp f)))
+
+(def ^:private manifest (delay (json/parse-string (must-slurp "manifest.jsonld"))))
+(def ^:private vessel   (delay (edn/read-string (must-slurp "data/vessel.edn"))))
+
+(defn- declared-gates []     (get-in @manifest ["constitutionalGates" "gates"]))
+(defn- declared-non-goals [] (get-in @manifest ["nonGoals" "goals"]))
+
+(defn- declared-provisions []
+  (merge (declared-gates) (declared-non-goals)))
+
+;; ── the documents are actually readable ─────────────────────────────────────
+
+(deftest constitution-is-readable-and-complete
+  (is (= 14 (count (declared-gates))) "manifest declares 14 constitutional gates")
+  (is (= 12 (count (declared-non-goals))) "manifest declares 12 non-goals")
+  (is (every? string? (vals (declared-provisions)))))
+
+(deftest vessel-record-is-readable
+  (is (sequential? @vessel))
+  (is (seq @vessel))
+  (is (some :vessel/id @vessel) "the reference design declares a vessel entity"))
+
+;; ── the Governor names only provisions that exist ───────────────────────────
+
+(deftest every-provision-the-governor-names-is-declared
+  (let [declared (set (keys (declared-provisions)))
+        named    (into (set (map :id g/rules)) (map :id g/deferred-provisions))
+        invented (sort (remove declared named))]
+    (is (empty? invented)
+        (str "the Governor names provisions the constitution does not declare: "
+             (pr-str invented)))))
+
+;; ── and every declared provision is accounted for ───────────────────────────
+
+(deftest every-declared-provision-is-either-ruled-or-deferred
+  (testing "a gate that is neither enforced nor listed as deferred would be
+            invisible — an approval would silently cover it"
+    (let [declared  (set (keys (declared-provisions)))
+          ruled     (set (map :id g/rules))
+          deferred  (set (map :id g/deferred-provisions))
+          accounted (into ruled deferred)
+          orphans   (sort (remove accounted declared))]
+      (is (empty? orphans)
+          (str "declared provisions that no rule enforces and no deferral names: "
+               (pr-str orphans))))))
+
+(deftest ruled-and-deferred-are-disjoint
+  (let [ruled    (set (map :id g/rules))
+        deferred (set (map :id g/deferred-provisions))
+        both     (sort (filter ruled deferred))]
+    (is (empty? both)
+        (str "a provision cannot be both enforced and deferred: " (pr-str both)))))
+
+;; ── the constants match the declared text ───────────────────────────────────
+
+(deftest kpi-caps-match-the-declared-gate-text
+  (testing "editing a cap in code without amending the constitution must fail here"
+    (let [g12 (get (declared-gates) "G12")]
+      (is (some? g12))
+      (is (str/includes? g12 (str g/max-dwt))
+          (str "G12 text must carry the DWT cap " g/max-dwt ": " g12))
+      (is (str/includes? g12 (str g/max-service-speed-kn))
+          (str "G12 text must carry the speed cap " g/max-service-speed-kn ": " g12))
+      (is (str/includes? g12 (str "Degree " g/max-mass-degree))
+          (str "G12 text must carry the MASS ceiling: " g12)))))
+
+(deftest sonar-cap-matches-the-declared-gate-text
+  (let [g8 (get (declared-gates) "G8")]
+    (is (some? g8))
+    (is (str/includes? g8 (str g/max-sonar-db))
+        (str "G8 text must carry the sonar cap " g/max-sonar-db ": " g8))))
+
+(deftest mass-degree-ceiling-matches-the-declared-gate-text
+  (let [g7 (get (declared-gates) "G7")]
+    (is (some? g7))
+    (is (str/includes? g7 (str "Degree " g/max-mass-degree))
+        (str "G7 text must carry the MASS ceiling: " g7))))
+
+(deftest g13-is-the-defining-zero-emission-gate
+  (testing "the Governor treats G13 as the propulsion allowlist; the constitution
+            must still be the document that says so"
+    (let [g13 (get (declared-gates) "G13")]
+      (is (some? g13))
+      (is (str/includes? g13 "DEFINING"))
+      (is (re-find #"(?i)zero-emission" g13))
+      (is (re-find #"(?i)no fossil" g13)))))
+
+;; ── the reference design passes its own constitution ────────────────────────
+
+(deftest the-reference-vessel-is-approved
+  (testing "data/vessel.edn is the design this actor exists to build; if the
+            Governor refuses it, either the rules or the design is wrong"
+    (let [v (g/review @vessel)]
+      (is (= :approved (:status v)) (g/explain v))
+      (is (empty? (:violations v)))
+      (is (empty? (:unresolved v))))))
+
+(deftest the-reference-vessel-exercises-the-enforced-rules
+  (testing "the approval above is worth something only if the rules actually ran
+            against this record rather than finding nothing to look at"
+    (let [v       (g/review @vessel)
+          checked (set (:checked v))]
+      (doseq [id ["G7" "G8" "G12" "G13" "G14" "N2" "N5" "N10"]]
+        (is (contains? checked id)
+            (str id " should have been evaluated against the reference vessel"))))))
+
+;; ── refusal still fires against the real record ─────────────────────────────
+
+(deftest a-fossil-engine-added-to-the-real-record-is-refused
+  (testing "the same fixture-level refusal, but against data/vessel.edn itself"
+    (let [tampered (conj (vec @vessel)
+                         {:propulsion/id "funadaiku.nagi.aux-diesel"
+                          :propulsion/kind :diesel})
+          v (g/review tampered)]
+      (is (= :refused (:status v)))
+      (is (some #(and (= "G13" (:provision %)) (= :fossil-propulsion (:reason %)))
+                (:violations v)))
+      (is (some #(and (= "N5" (:provision %)) (= :fossil-propulsion (:reason %)))
+                (:violations v))))))

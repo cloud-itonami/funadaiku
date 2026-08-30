@@ -1,0 +1,234 @@
+(ns funadaiku.governor-test
+  "Decision tests for the constitutional Governor.
+
+  Every refusal test pins the provision id AND the reason literal, not merely
+  the fact that something was refused. A test that asserts only `:refused`
+  counts a proposal rejected for the wrong reason as a success, which is how a
+  guard comes to be believed while it is enforcing nothing — see the workspace
+  rule on negative tests that never discriminate for the reason they name.
+  Renaming a :reason keyword is a contract change and must fail here."
+  (:require [clojure.test :refer [deftest is testing]]
+            [funadaiku.governor :as g]))
+
+;; ── fixtures ────────────────────────────────────────────────────────────────
+;; Shaped like data/vessel.edn. `conformance-test` runs the same rules against
+;; the real file, so this fixture cannot drift into a private dialect.
+
+(def compliant
+  [{:vessel/id "t.nagi" :vessel/type :coastal-cargo :vessel/zero-emission true
+    :vessel/dwt 3000 :vessel/service-speed-kn 10.0 :vessel/eol-route :hodoki+kanayama}
+   {:autonomy/id "t.gnc" :autonomy/mass-degree 3 :autonomy/sonar-db-cap 180}
+   {:propulsion/id "t.wind" :propulsion/kind :wind-assist}
+   {:propulsion/id "t.h2"   :propulsion/kind :hydrogen-fuelcell
+    :hydrogen/green-coc-required true}
+   {:propulsion/id "t.batt" :propulsion/kind :lfp-battery}
+   {:propulsion/id "t.pod"  :propulsion/kind :electric-azimuth-pod}
+   {:decarb/id "t.decarb" :decarb/scope :well-to-wake :decarb/fossil-engine false}])
+
+(defn- add [proposal entity] (conj (vec proposal) entity))
+
+(defn- amend
+  "Merge `m` into the entity carrying key `k`."
+  [proposal k m]
+  (mapv #(if (contains? % k) (merge % m) %) proposal))
+
+(defn- drop-entities [proposal k] (vec (remove #(contains? % k) proposal)))
+
+(defn- violation?
+  "Did `provision` refuse for exactly `reason`?"
+  [verdict provision reason]
+  (boolean (some #(and (= provision (:provision %)) (= reason (:reason %)))
+                 (:violations verdict))))
+
+(defn- unresolved? [verdict provision reason]
+  (boolean (some #(and (= provision (:provision %)) (= reason (:reason %)))
+                 (:unresolved verdict))))
+
+;; ── the compliant reference passes ──────────────────────────────────────────
+
+(deftest compliant-proposal-is-approved
+  (let [v (g/review compliant)]
+    (is (= :approved (:status v)) (g/explain v))
+    (is (g/approved? v))
+    (is (empty? (:violations v)))
+    (is (empty? (:unresolved v)))))
+
+(deftest approval-still-reports-what-it-did-not-check
+  (testing "an :approved verdict names the provisions this layer cannot decide"
+    (let [v (g/review compliant)]
+      (is (seq (:deferred v)))
+      (is (every? :why (:deferred v)))
+      (testing "and the process gates are among them, not silently satisfied"
+        (let [ids (set (map :id (:deferred v)))]
+          (doseq [id ["G1" "G2" "G3" "G4" "G6" "G11"]]
+            (is (contains? ids id) (str id " must be reported as deferred"))))))))
+
+;; ── G13 / N5 — the defining gate ────────────────────────────────────────────
+
+(deftest g13-refuses-a-fossil-auxiliary-engine
+  (let [v (g/review (add compliant {:propulsion/id "t.aux" :propulsion/kind :diesel}))]
+    (is (= :refused (:status v)))
+    (is (violation? v "G13" :fossil-propulsion))
+    (testing "N5 reinforces G13, so both provisions fire"
+      (is (violation? v "N5" :fossil-propulsion)))
+    (is (not (g/approved? v)))))
+
+(deftest g13-refuses-an-unrecognised-propulsion-kind
+  (testing "the allowlist is fail-closed: an unknown kind is refused, not passed"
+    (let [v (g/review (add compliant {:propulsion/id "t.x" :propulsion/kind :perpetual-motion}))]
+      (is (= :refused (:status v)))
+      (is (violation? v "G13" :unrecognised-propulsion))
+      (testing "and it is not miscounted as a fossil engine"
+        (is (not (violation? v "G13" :fossil-propulsion)))
+        (is (not (violation? v "N5" :fossil-propulsion)))))))
+
+(deftest g13-refuses-a-disclaimed-zero-emission-claim
+  (let [v (g/review (amend compliant :vessel/id {:vessel/zero-emission false}))]
+    (is (violation? v "G13" :zero-emission-disclaimed))))
+
+(deftest g13-and-n5-refuse-a-declared-fossil-engine
+  (let [v (g/review (amend compliant :decarb/id {:decarb/fossil-engine true}))]
+    (is (violation? v "G13" :fossil-engine-declared))
+    (is (violation? v "N5" :fossil-engine-declared))))
+
+(deftest g13-cannot-be-satisfied-by-omitting-the-powertrain
+  (testing "absent propulsion is unresolved, never approved — a missing field
+            must not be the cheapest route through the defining gate"
+    (let [v (g/review (drop-entities compliant :propulsion/kind))]
+      (is (= :indeterminate (:status v)))
+      (is (unresolved? v "G13" :no-propulsion-declared))
+      (is (not (g/approved? v))))))
+
+;; ── N2 — nuclear ────────────────────────────────────────────────────────────
+
+(deftest n2-refuses-nuclear-propulsion
+  (let [v (g/review (add compliant {:propulsion/id "t.n" :propulsion/kind :nuclear-reactor}))]
+    (is (= :refused (:status v)))
+    (is (violation? v "N2" :nuclear-propulsion))
+    (testing "N2 is the provision that names it, so G13 does not also call it unrecognised"
+      (is (not (violation? v "G13" :unrecognised-propulsion))))))
+
+;; ── G7 / G12 / N10 — autonomy and KPI caps ──────────────────────────────────
+
+(deftest g7-refuses-autonomy-above-degree-3
+  (let [v (g/review (amend compliant :autonomy/id {:autonomy/mass-degree 4}))]
+    (is (= :refused (:status v)))
+    (is (violation? v "G7" :autonomy-degree-over-cap))
+    (testing "N10 fires too: Degree 4 without an independent Council review"
+      (is (violation? v "N10" :degree-4-without-council-review)))))
+
+(deftest n10-is-satisfied-by-a-council-reviewed-degree-4
+  (testing "N10 excludes unreviewed Degree 4; the review clears N10 but not the G7 ceiling"
+    (let [v (g/review (amend compliant :autonomy/id
+                             {:autonomy/mass-degree 4 :autonomy/degree-4-council-review true}))]
+      (is (not (violation? v "N10" :degree-4-without-council-review)))
+      (is (violation? v "G7" :autonomy-degree-over-cap)))))
+
+(deftest g12-refuses-an-oversized-vessel
+  (let [v (g/review (amend compliant :vessel/id {:vessel/dwt 8000}))]
+    (is (violation? v "G12" :dwt-over-cap))))
+
+(deftest g12-refuses-an-over-speed-vessel
+  (let [v (g/review (amend compliant :vessel/id {:vessel/service-speed-kn 20.0}))]
+    (is (violation? v "G12" :service-speed-over-cap))))
+
+(deftest g12-caps-are-inclusive-at-the-limit
+  (testing "the cap values themselves are compliant, not off-by-one refusals"
+    (let [v (g/review (amend compliant :vessel/id
+                             {:vessel/dwt g/max-dwt
+                              :vessel/service-speed-kn g/max-service-speed-kn}))]
+      (is (= :approved (:status v)) (g/explain v)))))
+
+;; ── G8 — cetacean sonar cap ─────────────────────────────────────────────────
+
+(deftest g8-refuses-sonar-above-the-cetacean-cap
+  (let [v (g/review (amend compliant :autonomy/id {:autonomy/sonar-db-cap 200}))]
+    (is (violation? v "G8" :sonar-over-cetacean-cap))))
+
+(deftest g8-is-unresolved-when-no-sonar-cap-is-declared
+  (let [v (g/review (mapv #(dissoc % :autonomy/sonar-db-cap) compliant))]
+    (is (unresolved? v "G8" :sonar-cap-not-declared))
+    (is (not (g/approved? v)))))
+
+;; ── G14 — well-to-wake + green chain-of-custody ─────────────────────────────
+
+(deftest g14-refuses-tank-to-wake-accounting
+  (testing "the exact dodge the README names: a fossil-powered H2 supply chain
+            hidden by scoping emissions to the tank"
+    (let [v (g/review (amend compliant :decarb/id {:decarb/scope :tank-to-wake}))]
+      (is (violation? v "G14" :scope-not-well-to-wake)))))
+
+(deftest g14-refuses-a-waived-green-chain-of-custody
+  (let [v (g/review (amend compliant :propulsion/id
+                           {:hydrogen/green-coc-required false}))]
+    (is (violation? v "G14" :green-coc-waived))))
+
+(deftest g14-is-unresolved-when-the-fuel-cell-declares-no-coc
+  (let [v (g/review (mapv #(dissoc % :hydrogen/green-coc-required) compliant))]
+    (is (unresolved? v "G14" :green-coc-not-declared))
+    (is (not (g/approved? v)))))
+
+;; ── screens ─────────────────────────────────────────────────────────────────
+
+(deftest n1-refuses-declared-armament
+  (let [v (g/review (amend compliant :vessel/id {:vessel/armament [:deck-gun]}))]
+    (is (violation? v "N1" :armament-declared))))
+
+(deftest n1-refuses-a-naval-vessel-type
+  (let [v (g/review (amend compliant :vessel/id {:vessel/type :warship}))]
+    (is (violation? v "N1" :naval-vessel-type))))
+
+(deftest n3-refuses-a-low-observable-hull
+  (let [v (g/review (amend compliant :vessel/id {:vessel/low-observable true}))]
+    (is (violation? v "N3" :low-observable-declared))))
+
+(deftest n8-refuses-a-beaching-yard-end-of-life-route
+  (let [v (g/review (amend compliant :vessel/id {:vessel/eol-route :beaching-alang}))]
+    (is (violation? v "N8" :beaching-yard-eol))))
+
+(deftest n12-refuses-speed-record-priority
+  (let [v (g/review (amend compliant :vessel/id {:vessel/design-priority :speed-record}))]
+    (is (violation? v "N12" :speed-record-priority))))
+
+(deftest screens-report-absence-rather-than-claiming-compliance
+  (testing "silence about armament is reported as :screened, never as a pass"
+    (let [v (g/review (mapv #(dissoc % :vessel/type) compliant))
+          screened (set (map (juxt :provision :reason) (:screened v)))]
+      (is (contains? screened ["N1" :no-naval-declaration])))))
+
+;; ── fail-closed on absent input ─────────────────────────────────────────────
+
+(deftest an-empty-proposal-is-never-approved
+  (doseq [empty-input [[] {} nil]]
+    (let [v (g/review empty-input)]
+      (is (not (g/approved? v))
+          (str "empty input " (pr-str empty-input) " must not be approved"))
+      (is (= :indeterminate (:status v)))
+      (is (seq (:unresolved v))))))
+
+(deftest approved?-is-true-only-for-a-clean-approval
+  (is (g/approved? {:status :approved}))
+  (is (not (g/approved? {:status :indeterminate})))
+  (is (not (g/approved? {:status :refused})))
+  (testing "an unknown status is not a pass"
+    (is (not (g/approved? {:status :probably-fine})))
+    (is (not (g/approved? {})))))
+
+(deftest refusal-outranks-indeterminacy
+  (testing "a proposal that both violates a gate and omits another still reads :refused"
+    (let [v (g/review [{:vessel/id "t" :vessel/dwt 9000}
+                       {:propulsion/id "t.d" :propulsion/kind :diesel}])]
+      (is (= :refused (:status v)))
+      (is (violation? v "G12" :dwt-over-cap))
+      (is (seq (:unresolved v))))))
+
+;; ── explain ─────────────────────────────────────────────────────────────────
+
+(deftest explain-names-the-provision-and-reason
+  (let [v (g/review (add compliant {:propulsion/id "t.aux" :propulsion/kind :diesel}))
+        text (g/explain v)]
+    (is (re-find #"refused" text))
+    (is (re-find #"G13" text))
+    (is (re-find #"fossil-propulsion" text))
+    (testing "and states that deferred provisions were not checked"
+      (is (re-find #"deferred" text)))))
