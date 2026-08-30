@@ -2,7 +2,10 @@
  :aliases
  {:test {:extra-paths ["test"]
          :extra-deps {io.github.cognitect-labs/test-runner
-                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}
+                      ;; governor-conformance-test reads manifest.jsonld, the
+                      ;; document the Governor claims to enforce.
+                      cheshire/cheshire {:mvn/version "5.13.0"}}
          :main-opts ["-m" "cognitect.test-runner"]}
   :lint {:replace-deps {clj-kondo/clj-kondo {:mvn/version "2024.11.14"}}
          :main-opts    ["-m" "clj-kondo.main" "--lint" "src" "test" "--fail-level" "error"]}}}
