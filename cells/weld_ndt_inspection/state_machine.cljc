@@ -1,7 +1,7 @@
 (ns funadaiku.cells.weld-ndt-inspection.state-machine
   "1:1 port of cells/weld_ndt_inspection/state_machine.py (ADR-2606013400). weld_ndt_inspection state machine — ADR-2606013400 (L3 100% RT/UT/PT hull-seam NDT).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"

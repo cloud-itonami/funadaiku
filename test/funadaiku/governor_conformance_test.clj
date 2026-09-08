@@ -14,7 +14,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [cheshire.core :as json]
             [funadaiku.governor :as g]))
 

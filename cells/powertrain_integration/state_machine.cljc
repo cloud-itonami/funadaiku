@@ -1,7 +1,7 @@
 (ns funadaiku.cells.powertrain-integration.state-machine
   "1:1 port of cells/powertrain_integration/state_machine.py (ADR-2606013400). powertrain_integration state machine — ADR-2606013400 (L4 wind-assist + solar + H2 fuel cell + LFP + e-pod + GNC).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"

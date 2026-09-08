@@ -4,7 +4,7 @@
   tithe-split settlement. Defining gate G8: NO fossil main/auxiliary engine — wind-assist + solar +
   green-H₂ fuel-cell + LFP + electric pods ONLY; G9: green-H₂ well-to-wake chain-of-custody. The
   Murakumo llm host binding is the omitted leg — _infer returns 'LLM_NOT_AVAILABLE' (local fallback)."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def TITHE-BPS 1000)
 (def DWT-CAP 5000)
@@ -46,12 +46,12 @@
                                     "pass/rework/fail per class society standards. Zero tolerance for "
                                     "unrepaired cracks."))]
         (merge state {"ndt_eval" eval-result
-                      "result" (if (str/includes? (str/lower-case eval-result) "pass") "pass" "rework")})))))
+                      "result" (if (str/includes? (str/lower eval-result) "pass") "pass" "rework")})))))
 
 (defn gate-zero-emission-propulsion
   "G8 gate: enforce ZERO fossil propulsion (wind + solar + green-H₂ FC + LFP + e-pods ONLY)."
   [powertrain]
-  (let [t (str/lower-case (get powertrain "type" ""))]
+  (let [t (str/lower (get powertrain "type" ""))]
     (cond
       (or (str/includes? t "fossil") (str/includes? t "diesel") (str/includes? t "gas"))
       {"ok" false "reason" "fossil propulsion prohibited per G8 (defining gate)"}
@@ -59,7 +59,7 @@
       {"ok" false "reason" "missing hydrogen or solar per G8"}
       :else
       (let [h2 (get powertrain "hydrogen_source_certification" "")]
-        (if (or (empty? h2) (not (str/includes? (str/lower-case h2) "green")))
+        (if (or (empty? h2) (not (str/includes? (str/lower h2) "green")))
           {"ok" false "reason" "non-green hydrogen violates G9 (well-to-wake CoC)"}
           {"ok" true "reason" "zero-emission propulsion verified"})))))
 

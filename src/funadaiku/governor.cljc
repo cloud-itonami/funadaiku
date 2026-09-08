@@ -34,7 +34,7 @@
   `:deferred` on every verdict, so an `:approved` states in its own output how
   much of the constitution it did not check. An approval that quietly covered
   all 26 provisions would be the more dangerous artifact."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── constitutional constants ────────────────────────────────────────────────
 ;; These mirror G7/G12 in manifest.jsonld. `governor-test` cross-checks each

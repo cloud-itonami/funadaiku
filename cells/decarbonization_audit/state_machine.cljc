@@ -1,7 +1,7 @@
 (ns funadaiku.cells.decarbonization-audit.state-machine
   "1:1 port of cells/decarbonization_audit/state_machine.py (ADR-2606013400). decarbonization_audit state machine — ADR-2606013400 (cross-cutting well-to-wake zero-emission verification).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"

@@ -1,7 +1,7 @@
 (ns funadaiku.cells.grand-block-assembly.state-machine
   "1:1 port of cells/grand_block_assembly/state_machine.py (ADR-2606013400). grand_block_assembly state machine — ADR-2606013400 (L2 grand-block erection + joining on building dock).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"
