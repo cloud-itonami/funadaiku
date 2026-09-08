@@ -1,7 +1,7 @@
 (ns funadaiku.cells.steel-block-fabrication.state-machine
   "1:1 port of cells/steel_block_fabrication/state_machine.py (ADR-2606013400). steel_block_fabrication state machine — ADR-2606013400 (L1 panel line + curved/flat block + sub-assembly).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"

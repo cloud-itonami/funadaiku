@@ -16,7 +16,7 @@
   This is the canonical thin-ingest-scaffold pattern shared by all Tier-B actors whose
   kotoba ingest is still at R0 (seed.edn present, MCP wiring not yet provisioned).
   The template differs per-actor only in ns name + :graph default + seed path."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             #?(:clj [clojure.java.io :as io])))
 
 ;; ─── defaults ────────────────────────────────────────────────────────────────

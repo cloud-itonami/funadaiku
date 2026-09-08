@@ -19,7 +19,7 @@
     - Python str field identities (vessel ids/class) stay strings
     - transitions are pure fns; the closed CellState surface + R0 solve gate
       → ex-info"
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── SeaTrialPhase (enum — Python value identities preserved) ───────
 

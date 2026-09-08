@@ -23,7 +23,7 @@
   (Java String.format is HALF_UP — so we never use it for the energy figures). Math/ maps
   pow/etc last-ULP identical on the JVM. The energy-balance numbers (kWh, SoC shares, range)
   are byte-identical to python3. Portable .cljc."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 ;; ── float formatting (HALF_EVEN on the exact double, matching Python {x:.Nf}) ──
 ;; Python's format() / round() use round-half-to-even on the exact binary value of the

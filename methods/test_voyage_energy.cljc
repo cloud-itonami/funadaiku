@@ -15,7 +15,7 @@
   Pregel-cell concern and out of scope here (deferred — that suite is generic over all 9
   cells and lives under cells/)."
   (:require [clojure.test :refer [deftest is run-tests]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [funadaiku.methods.voyage-energy :as ve]))
 
 (defn- sim [] (ve/simulate (ve/->vessel) (ve/->voyage)))

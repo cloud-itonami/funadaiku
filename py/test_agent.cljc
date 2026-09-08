@@ -3,7 +3,7 @@
   Offline (no llm): zero-emission propulsion enforcement (G8), green-H₂ chain-of-custody (G9), USDC
   tithe-split (G7), and the 9 lifecycle handlers."
   (:require [clojure.test :refer [deftest is]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [funadaiku.py.agent :as agent]))
 
 (deftest test-steel-block-fabrication-plan
@@ -32,23 +32,23 @@
 (deftest test-gate-g8-rejects-fossil
   (let [out (agent/gate-zero-emission-propulsion {"type" "diesel-main-engine"})]
     (is (= false (get out "ok")))
-    (is (str/includes? (str/lower-case (get out "reason" "")) "fossil"))))
+    (is (str/includes? (str/lower (get out "reason" "")) "fossil"))))
 
 (deftest test-gate-g8-rejects-missing-hydrogen
   (let [out (agent/gate-zero-emission-propulsion {"type" "solar-wind"})]
     (is (= false (get out "ok")))
-    (is (str/includes? (str/lower-case (get out "reason" "")) "hydrogen"))))
+    (is (str/includes? (str/lower (get out "reason" "")) "hydrogen"))))
 
 (deftest test-gate-g8-rejects-missing-solar
   (let [out (agent/gate-zero-emission-propulsion {"type" "wind-hydrogen"})]
     (is (= false (get out "ok")))
-    (is (str/includes? (str/lower-case (get out "reason" "")) "solar"))))
+    (is (str/includes? (str/lower (get out "reason" "")) "solar"))))
 
 (deftest test-gate-g9-rejects-non-green-hydrogen
   (let [out (agent/gate-zero-emission-propulsion {"type" "wind-solar-hydrogen"
                                                   "hydrogen_source_certification" "fossil-steam-reforming"})]
     (is (= false (get out "ok")))
-    (is (str/includes? (str/lower-case (get out "reason" "")) "green"))))
+    (is (str/includes? (str/lower (get out "reason" "")) "green"))))
 
 (deftest test-gate-g8-g9-pass-green-zero-emission
   (let [out (agent/gate-zero-emission-propulsion {"type" "wind-solar-hydrogen"

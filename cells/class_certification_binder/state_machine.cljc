@@ -1,7 +1,7 @@
 (ns funadaiku.cells.class-certification-binder.state-machine
   "1:1 port of cells/class_certification_binder/state_machine.py (ADR-2606013400). class_certification_binder state machine — ADR-2606013400 (terminal class + IMO MASS audit binder).
   R0 scaffold: phase transitions are structural placeholders; .solve() raises until Council Lv6+ ratifies ADR-2606013415."
-  (:require [clojure.string]))
+  (:require [kotoba.lang.text]))
 
 (def cell-state-defaults
   {"phase" "init" "vesselId" "NAGI-COASTAL-0001" "vesselClass" "Nagi 凪"

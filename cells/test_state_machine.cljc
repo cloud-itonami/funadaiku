@@ -4,7 +4,7 @@
   Each transition_to_* returns a well-formed {cell_state, next_node} whose completionPct is an int in
   (0,100], the pcts are distinct + reach 100, and exactly one transition routes to `end` at 100%."
   (:require [clojure.test :refer [deftest is]]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             funadaiku.cells.steel-block-fabrication.state-machine
             funadaiku.cells.grand-block-assembly.state-machine
             funadaiku.cells.weld-ndt-inspection.state-machine
