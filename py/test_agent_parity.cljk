@@ -12,7 +12,7 @@
 
   Gracefully SKIPS if python3 is unavailable (red only on a genuine py↔clj divergence).
 
-  Run:  bb --classpath 20-actors 20-actors/funadaiku/py/test_agent_parity.clj"
+  Run:  bb --classpath 20-actors 20-actors/funadaiku/py/test_agent_parity.cljk"
   (:require [funadaiku.py.agent :as a]
             [clojure.java.shell :refer [sh]]
             [cheshire.core :as json]
