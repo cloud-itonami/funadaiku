@@ -219,7 +219,7 @@
      out/voyage-energy.kotoba.edn, then print the headline (file I/O at the edge).
      1:1 with voyage_energy.main(), including the stdout headline format. The output dir
      resolves like Python's os.path.dirname(dirname(abspath(__file__))) → <actor>/out;
-     pass an explicit dir as argv[0] to override (e.g. when *file* is unbound under bb -m)."
+     pass an explicit dir as argv[0] to override (e.g. when *file* is unbound under kbb -m)."
      [& argv]
      (let [v (->vessel)
            voy (->voyage)

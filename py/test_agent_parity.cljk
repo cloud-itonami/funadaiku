@@ -1,4 +1,4 @@
-#!/usr/bin/env bb
+#!/usr/bin/env kbb
 ;; LIVE cross-language py↔clj parity for the funadaiku zero-emission cargo-ship agent.
 (ns funadaiku.py.test-agent-parity
   "test_agent_parity.clj — funadaiku agent py↔clj LIVE parity (ADR-2606013400).
@@ -12,7 +12,7 @@
 
   Gracefully SKIPS if python3 is unavailable (red only on a genuine py↔clj divergence).
 
-  Run:  bb --classpath 20-actors 20-actors/funadaiku/py/test_agent_parity.cljk"
+  Run:  kbb --classpath 20-actors 20-actors/funadaiku/py/test_agent_parity.cljk"
   (:require [funadaiku.py.agent :as a]
             [clojure.java.shell :refer [sh]]
             [cheshire.core :as json]
