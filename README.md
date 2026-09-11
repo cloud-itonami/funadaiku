@@ -78,7 +78,7 @@ Council + operator gated (G11/G12).
 - [`CLAUDE.md`](CLAUDE.md) — actor build notes
 - [`data/vessel.edn`](data/vessel.edn) · [`data/shipyard.edn`](data/shipyard.edn) · [`data/building.edn`](data/building.edn) · [`data/fleet.kotoba.edn`](data/fleet.kotoba.edn)
 - [`products.edn`](products.edn) — Ring-1 catalog (zero-emission freight + Nagi-class build)
-- [`src/funadaiku/governor.cljc`](src/funadaiku/governor.cljc) — constitutional Governor: refuses a
+- [`src/funadaiku/governor.cljk`](src/funadaiku/governor.cljk) — constitutional Governor: refuses a
   design proposal that violates G7/G8/G12/G13/G14 or N1/N2/N3/N5/N8/N10/N12, and reports the
   provisions a design record cannot decide rather than passing them silently
 - [`methods/voyage_energy.py`](methods/voyage_energy.py) — wind/solar/hydrogen energy-budget sim

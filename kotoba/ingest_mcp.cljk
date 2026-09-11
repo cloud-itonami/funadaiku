@@ -7,8 +7,8 @@
 ;; (operator AT-session JWT, no-server-key posture, G12/G13).
 ;;
 ;; Usage:
-;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljc
-;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljc --url http://127.0.0.1:8077 --graph com.etzhayyim.funadaiku
+;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljk
+;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljk --url http://127.0.0.1:8077 --graph com.etzhayyim.funadaiku
 (ns funadaiku.kotoba.ingest-mcp
   "funadaiku 船大工 — MCP seed-ingest scaffold (dry-run default, live path placeholder).
   ADR-2606013400.

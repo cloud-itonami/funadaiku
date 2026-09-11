@@ -10,7 +10,7 @@ niyaku (port cargo handling).
 | Lexicons | ✅ 9 under `com.etzhayyim.funadaiku.*` (block/grandBlock/outfitting/powertrain/launch/seaTrial/weld + decarbonizationAudit + silenCargoShipReview) |
 | Cells | 🟡 path-reserved (grand-block → outfitting → powertrain → launch → trial, R0) |
 | Manifest | ✅ `manifest.jsonld` — `constitutionalGates` (G1–G14) machine-readable |
-| Tests | ✅ **4 suites green** — `methods/test_charter_gates.cljc` (**7**, added 2026-06-16) + `methods/test_voyage_energy.py` + `cells/test_state_machines.py` + `py/test_agent.py`; `./run_tests.sh` aggregates all (all standalone-runnable) |
+| Tests | ✅ **4 suites green** — `methods/test_charter_gates.cljk` (**7**, added 2026-06-16) + `methods/test_voyage_energy.py` + `cells/test_state_machines.py` + `py/test_agent.py`; `./run_tests.sh` aggregates all (all standalone-runnable) |
 | Methods | 🟡 `voyage_energy.py`/`.cljc` present; offline build engine = R1 |
 
 ## Charter gates pinned by the new charter-gate test
@@ -36,4 +36,4 @@ niyaku (port cargo handling).
 
 silenCargoShipReview `r1-scale-model-hil` + Council; cell `.solve()` stays R0-gated.
 
-> **2026-06-17 substrate-native migration (ADR-2606160842):** the charter-gate test above was ported Python→Clojure (`methods/test_charter_gates.py` → `methods/test_charter_gates.cljc`, ns `funadaiku.methods.test-charter-gates`, reads the lexicons via cheshire/edn) and the Python was pruned. Run via `./run_tests.sh` (now `exec bb`) or `bb run test:charter` (all 34 charter suites; 244 tests / 924 assertions green). Assertions unchanged (1:1 port).
+> **2026-06-17 substrate-native migration (ADR-2606160842):** the charter-gate test above was ported Python→Clojure (`methods/test_charter_gates.py` → `methods/test_charter_gates.cljk`, ns `funadaiku.methods.test-charter-gates`, reads the lexicons via cheshire/edn) and the Python was pruned. Run via `./run_tests.sh` (now `exec bb`) or `bb run test:charter` (all 34 charter suites; 244 tests / 924 assertions green). Assertions unchanged (1:1 port).
