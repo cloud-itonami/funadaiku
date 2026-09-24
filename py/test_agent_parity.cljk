@@ -14,7 +14,7 @@
 
   Run:  kbb --classpath 20-actors 20-actors/funadaiku/py/test_agent_parity.cljk"
   (:require [funadaiku.py.agent :as a]
-            [clojure.java.shell :refer [sh]]
+            [kotoba.process :refer [sh]]
             [cheshire.core :as json]
             [kotoba.test :refer [deftest is run-tests]]))
 

@@ -2,7 +2,7 @@
   "funadaiku — constitutional-gate conformance tests (manifest + central lexicons).
   Substrate-native Clojure (ADR-2606160842). 1:1 port of the pruned methods/test_charter_gates.py."
   (:require [kotoba.test :refer [deftest is run-tests]]
-            [clojure.set :as set]
+            [kotoba.lang.coll :as set]
             [cheshire.core :as json]))
 
 (def ^:private here (.getParentFile (java.io.File. ^String *file*)))      ;; methods/
