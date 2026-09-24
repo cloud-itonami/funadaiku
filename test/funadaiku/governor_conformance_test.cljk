@@ -12,7 +12,7 @@
   when it could not read its input reports the same green as one that read
   everything and found no problem."
   (:require [kotoba.test :refer [deftest is testing]]
-            [clojure.edn :as edn]
+            [kotoba.lang.edn :as edn]
             [clojure.java.io :as io]
             [kotoba.lang.text :as str]
             [cheshire.core :as json]
