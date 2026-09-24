@@ -13,14 +13,14 @@
   everything and found no problem."
   (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.edn :as edn]
-            [clojure.java.io :as io]
+            [kotoba.io :as io]
             [kotoba.lang.text :as str]
             [cheshire.core :as json]
             [funadaiku.governor :as g]))
 
 (defn- must-slurp [path]
   (let [f (io/file path)]
-    (when-not (.exists f)
+    (when-not (io/exists? f)
       (throw (ex-info (str "conformance input missing: " path
                            " (cwd " (System/getProperty "user.dir") ")")
                       {:path path})))
