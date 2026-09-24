@@ -2,7 +2,7 @@
   "funadaiku 船大工 — agent cell tests. 1:1 port of py/test_agent.py (custom harness → clojure.test).
   Offline (no llm): zero-emission propulsion enforcement (G8), green-H₂ chain-of-custody (G9), USDC
   tithe-split (G7), and the 9 lifecycle handlers."
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [kotoba.lang.text :as str]
             [funadaiku.py.agent :as agent]))
 

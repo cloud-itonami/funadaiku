@@ -16,7 +16,7 @@
   (:require [funadaiku.py.agent :as a]
             [clojure.java.shell :refer [sh]]
             [cheshire.core :as json]
-            [clojure.test :refer [deftest is run-tests]]))
+            [kotoba.test :refer [deftest is run-tests]]))
 
 (def ^:private py-dir "20-actors/funadaiku/py")
 

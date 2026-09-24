@@ -15,7 +15,7 @@
   decarbonization_audit, class_certification_binder — plus
   `test_nine_cells_present` (the cross-cell directory-set drift guard) and the
   generic `test_all_state_machines_transition_to_completion` over all 9."
-  (:require [clojure.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.test :refer [deftest is testing run-tests]]
             [funadaiku.cells.sea-trial.cell :as cell]))
 
 ;; ── CellState defaults (fresh 0% INIT record) ─────────────────────
