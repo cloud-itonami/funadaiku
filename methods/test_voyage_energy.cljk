@@ -14,7 +14,7 @@
   voyage_energy.py). Cell/state-machine tests (cells/test_state_machines.py) are a separate
   Pregel-cell concern and out of scope here (deferred — that suite is generic over all 9
   cells and lives under cells/)."
-  (:require [clojure.test :refer [deftest is run-tests]]
+  (:require [kotoba.test :refer [deftest is run-tests]]
             [kotoba.lang.text :as str]
             [funadaiku.methods.voyage-energy :as ve]))
 

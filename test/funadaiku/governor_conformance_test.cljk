@@ -11,7 +11,7 @@
   the tests fail; they never skip. A conformance suite that silently passes
   when it could not read its input reports the same green as one that read
   everything and found no problem."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
             [kotoba.lang.text :as str]

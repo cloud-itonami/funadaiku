@@ -7,7 +7,7 @@
   guard comes to be believed while it is enforcing nothing — see the workspace
   rule on negative tests that never discriminate for the reason they name.
   Renaming a :reason keyword is a contract change and must fail here."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [funadaiku.governor :as g]))
 
 ;; ── fixtures ────────────────────────────────────────────────────────────────
