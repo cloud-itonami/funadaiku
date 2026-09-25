@@ -15,7 +15,7 @@
   decarbonization_audit, class_certification_binder — plus
   `test_nine_cells_present` (the cross-cell directory-set drift guard) and the
   generic `test_all_state_machines_transition_to_completion` over all 9."
-  (:require [kotoba.test :refer [deftest is testing run-tests]]
+  (:require [kotoba.lang.error :as kerror] [kotoba.test :refer [deftest is testing run-tests]]
             [funadaiku.cells.sea-trial.cell :as cell]))
 
 ;; ── CellState defaults (fresh 0% INIT record) ─────────────────────
@@ -76,15 +76,15 @@
 
 (deftest test-closed-cell-state-surface
   (testing "an unexpected cell-state field raises"
-    (is (thrown? clojure.lang.ExceptionInfo
+    (is (thrown? kerror/ExceptionInfo
                  (cell/transition-to-speed-trial {:cell-state {:bogus 1}})))))
 
 ;; ── R0 solve gate (cell .solve() raises — ADR-2606013415) ─────────
 
 (deftest test-solve-raises-at-r0
   (testing "solve raises until Council R1 activation (the R0 scaffold gate)"
-    (is (thrown? clojure.lang.ExceptionInfo (cell/solve {} {})))
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"ADR-2606013415"
+    (is (thrown? kerror/ExceptionInfo (cell/solve {} {})))
+    (is (thrown-with-msg? kerror/ExceptionInfo #"ADR-2606013415"
                           (cell/solve (cell/make-sea-trial-cell) {})))))
 
 #?(:clj

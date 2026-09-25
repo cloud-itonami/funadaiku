@@ -17,7 +17,7 @@
   kotoba ingest is still at R0 (seed.edn present, MCP wiring not yet provisioned).
   The template differs per-actor only in ns name + :graph default + seed path."
   (:require [kotoba.lang.text :as str]
-            #?(:clj [clojure.java.io :as io])))
+            #?(:clj [kotoba.io :as io])))
 
 ;; ─── defaults ────────────────────────────────────────────────────────────────
 
@@ -26,7 +26,7 @@
 
 #?(:clj
    (def seed-path
-     (str (-> (io/file *file*) .getParentFile .getAbsolutePath)
+     (str (-> (io/file *file*) io/parent-file io/absolute-path)
           "/seed.edn")))
 
 ;; ─── minimal EDN entity counter (pure, no deps) ───────────────────────────────
