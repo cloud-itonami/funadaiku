@@ -75,7 +75,7 @@ Council + operator gated (G11/G12).
 ## Files
 
 - [`manifest.jsonld`](manifest.jsonld) — DID, cells, gates (G1–G14), non-goals (N1–N12), roadmap
-- [`CLAUDE.md`](CLAUDE.md) — actor build notes
+- [`AGENTS.md`](AGENTS.md) — actor build notes
 - [`data/vessel.edn`](data/vessel.edn) · [`data/shipyard.edn`](data/shipyard.edn) · [`data/building.edn`](data/building.edn) · [`data/fleet.kotoba.edn`](data/fleet.kotoba.edn)
 - [`products.edn`](products.edn) — Ring-1 catalog (zero-emission freight + Nagi-class build)
 - [`src/funadaiku/governor.cljk`](src/funadaiku/governor.cljk) — constitutional Governor: refuses a
